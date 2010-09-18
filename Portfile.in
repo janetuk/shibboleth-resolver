@@ -1,0 +1,22 @@
+PortSystem 1.0
+
+name                @PACKAGE@
+version             @PACKAGE_VERSION@
+categories          security shibboleth
+maintainers         cantor.2@osu.edu
+description         @PACKAGE@ extension for Shibboleth SP
+long_description    @PACKAGE@ extension for Shibboleth SP
+homepage            http://shibboleth.internet2.edu/
+
+platforms           darwin
+depends_lib         port:shibboleth
+
+master_sites        http://shibboleth.internet2.edu/downloads/extensions/sp/
+checksums           sha1 @CHECKSUM@
+
+configure.args      --disable-static \
+                    --with-xerces=${prefix} \
+                    --with-xmlsec=${prefix} \
+                    --with-xmltooling=${prefix} \
+                    --with-saml=${prefix} \
+                    --with-shibsp=${prefix}

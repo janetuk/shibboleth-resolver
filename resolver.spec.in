@@ -1,0 +1,107 @@
+Name:       @PACKAGE_NAME@
+Version:    @PACKAGE_VERSION@
+Summary:	Shibboleth SP Extension to Fizban Whatzit
+Release:	1
+Group:		System Environment/Libraries
+License:    Apache 2.0
+URL:		http://shibboleth.internet2.edu/
+Source0:	http://shibboleth.internet2.edu/downloads/extensions/sp/%{name}-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
+%if 0%{?suse_version} > 1030
+BuildRequires:  libXerces-c-devel >= 2.8.0
+%else
+BuildRequires:  libxerces-c-devel >= 2.8.0
+%endif
+BuildRequires:  libxml-security-c-devel >= 1.4.0
+%{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
+%{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
+BuildRequires:  gcc-c++, libxmltooling-devel, libsaml-devel, shibboleth-devel
+%if "%{_vendor}" == "redhat"
+BuildRequires: redhat-rpm-config
+%endif
+
+%if "%{_vendor}" == "suse"
+%define pkgdocdir %{_docdir}/%{name}
+%else
+%define pkgdocdir %{_docdir}/%{name}-%{version}
+%endif
+
+%description
+This package contains a Shibboleth SP Extension that provides
+externally accessible attribute resolver functionality for processing
+local and remote sources of federated attribute information.
+
+%package -n libshibresolver1
+Summary:    Shibboleth SP Attribute Resolver library
+Group:      Development/Libraries
+Provides:   @PACKAGE_NAME@ = %{version}-%{release}
+Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
+
+%description -n libshibresolver1
+This package contains a Shibboleth SP Extension that provides
+externally accessible attribute resolver functionality for processing
+local and remote sources of federated attribute information.
+
+This package contains just the shared library.
+
+%package -n libshibresolver-devel
+Summary:    Shibboleth SP Attribute Resolver development Headers
+Group:      Development/Libraries
+Requires:   libshibresolver1 = %{version}-%{release}
+Provides:   @PACKAGE_NAME@-devel = %{version}-%{release}
+Obsoletes:  @PACKAGE_NAME@-devel < %{version}-%{release}
+%if 0%{?suse_version} > 1030
+BuildRequires:  libXerces-c-devel >= 2.8.0
+%else
+BuildRequires:  libxerces-c-devel >= 2.8.0
+%endif
+Requires: libxml-security-c-devel >= 1.4.0
+Requires: libxmltooling-devel, libsaml-devel, shibboleth-devel
+%{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
+%{!?_with_log4cpp:Requires: liblog4shib-devel}
+
+%description -n libshibresolver-devel
+This package contains a Shibboleth SP Extension that provides
+externally accessible attribute resolver functionality for processing
+local and remote sources of federated attribute information.
+
+This package includes files needed for development.
+
+%prep
+%setup -q
+
+%build
+%configure %{?options}
+%{__make} pkgdocdir=%{pkgdocdir}
+
+%install
+[ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
+%{__make} install DESTDIR=$RPM_BUILD_ROOT pkgdocdir=%{pkgdocdir}
+
+%check
+%{__make} check
+
+%clean
+[ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
+
+%ifnos solaris2.8 solaris2.9 solaris2.10
+%post -n libshibresolver1 -p /sbin/ldconfig
+%endif
+
+%ifnos solaris2.8 solaris2.9 solaris2.10
+%postun -n libshibresolver1 -p /sbin/ldconfig
+%endif
+
+%files -n libshibresolver1
+%defattr(-,root,root,-)
+%{_libdir}/libshibresolver.so.*
+
+%files -n libshibresolver-devel
+%defattr(-,root,root,-)
+%{_includedir}/*
+%{_libdir}/*.so
+%doc %{pkgdocdir}
+
+%changelog
+* Tue Sep 14 2010  Scott Cantor  <cantor.2@osu.edu>  - 0.1-1
+- Initial specfile
