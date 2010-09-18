@@ -22,12 +22,103 @@
 
 #include "internal.h"
 
+#include <shibsp/ServiceProvider.h>
+#include <shibsp/attribute/Attribute.h>
+#include <shibsp/remoting/ListenerService.h>
+
+using namespace shibresolver;
 using namespace shibsp;
 #ifndef SHIBSP_LITE
 using namespace opensaml;
 #endif
 using namespace xmltooling;
 using namespace std;
+
+namespace shibresolver {
+    class SHIBRESOLVER_DLLLOCAL ResolverImpl : public ShibbolethResolver, public Remoted {
+    public:
+        ResolverImpl() {}
+        ~ResolverImpl() {}
+
+        void resolve();
+        void receive(DDF& in, ostream& out);
+    };
+};
+
+ShibbolethResolver* ShibbolethResolver::create()
+{
+    return new ResolverImpl();
+}
+
+ShibbolethResolver::ShibbolethResolver()
+{
+}
+
+ShibbolethResolver::~ShibbolethResolver()
+{
+    for_each(m_resolvedAttributes.begin(), m_resolvedAttributes.end(), xmltooling::cleanup<Attribute>());
+    if (m_mapper)
+        m_mapper->unlock();
+    if (m_sp)
+        m_sp->unlock();
+}
+
+void ShibbolethResolver::setServiceURI(const char* uri)
+{
+    m_serviceURI.erase();
+    if (uri)
+        m_serviceURI = uri;
+}
+
+void ShibbolethResolver::setApplicationID(const char* appID)
+{
+    m_appID.erase();
+    if (appID)
+        m_appID = appID;
+}
+
+void ShibbolethResolver::setIssuer(const char* issuer)
+{
+    m_issuer.erase();
+    if (issuer)
+        m_issuer = issuer;
+}
+
+void ShibbolethResolver::addToken(
+#ifdef SHIBSP_LITE
+        const XMLObject* token
+#else
+        const saml2::Assertion* token
+#endif
+    )
+{
+    if (token)
+        m_tokens.push_back(token);
+}
+
+void ShibbolethResolver::addAttribute(Attribute* attr)
+{
+    if (attr)
+        m_inputAttributes.push_back(attr);
+}
+
+vector<Attribute*>& ShibbolethResolver::getResolvedAttributes()
+{
+    return m_resolvedAttributes;
+}
+
+RequestMapper::Settings ShibbolethResolver::getSettings() const
+{
+    return m_settings;
+}
+
+void ResolverImpl::resolve()
+{
+}
+
+void ResolverImpl::receive(DDF& in, ostream& out)
+{
+}
 
 extern "C" int SHIBRESOLVER_EXPORTS xmltooling_extension_init(void*)
 {

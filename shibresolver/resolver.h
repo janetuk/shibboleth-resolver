@@ -125,7 +125,7 @@ namespace shibresolver {
          *
          * @return  array of resolved Attributes
          */
-        std::vector<shibsp::Attribute*>& getResolvedAttributes() const;
+        std::vector<shibsp::Attribute*>& getResolvedAttributes();
 
         /**
          * Returns mapped PropertySet and AccessControl objects, if any.
