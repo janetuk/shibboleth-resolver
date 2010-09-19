@@ -149,7 +149,7 @@ namespace shibresolver {
 #else
             unsigned long features = shibsp::SPConfig::OutOfProcess,
 #endif
-            const char* config = nullptr,
+            const char* config = NULL,
             bool rethrow = false
             );
 

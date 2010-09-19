@@ -40,6 +40,9 @@
 /* Define if Shibboleth SP library was found */
 #define HAVE_SHIBSP 1
 
+/* Define to 1 if Shibboleth SP supports non-plugin remoting. */
+#define SHIBRESOLVER_SHIBSP_HAS_REMOTING 1
+
 /* Define to 1 if you have the <stdint.h> header file. */
 /* #undef HAVE_STDINT_H */
 

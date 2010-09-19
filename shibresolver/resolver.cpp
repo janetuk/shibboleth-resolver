@@ -35,19 +35,20 @@ using namespace xmltooling;
 using namespace std;
 
 namespace shibresolver {
-    class SHIBRESOLVER_DLLLOCAL ResolverImpl : public ShibbolethResolver, public Remoted {
+    class SHIBRESOLVER_DLLLOCAL RemotedResolver : public Remoted {
     public:
-        ResolverImpl() {}
-        ~ResolverImpl() {}
+        RemotedResolver() {}
+        ~RemotedResolver() {}
 
-        void resolve();
         void receive(DDF& in, ostream& out);
     };
+
+    static RemotedResolver g_Remoted;
 };
 
 ShibbolethResolver* ShibbolethResolver::create()
 {
-    return new ResolverImpl();
+    return new ShibbolethResolver();
 }
 
 ShibbolethResolver::ShibbolethResolver()
@@ -112,17 +113,21 @@ RequestMapper::Settings ShibbolethResolver::getSettings() const
     return m_settings;
 }
 
-void ResolverImpl::resolve()
+void ShibbolethResolver::resolve()
 {
 }
 
-void ResolverImpl::receive(DDF& in, ostream& out)
+void RemotedResolver::receive(DDF& in, ostream& out)
 {
 }
 
 extern "C" int SHIBRESOLVER_EXPORTS xmltooling_extension_init(void*)
 {
-    // Register factory functions with appropriate plugin managers in the XMLTooling/SAML/SPConfig objects.
+#ifdef SHIBRESOLVER_SHIBSP_HAS_REMOTING
+    SPConfig& conf = SPConfig::getConfig();
+    if (conf.isEnabled(SPConfig::OutOfProcess) && !conf.isEnabled(SPConfig::InProcess) && conf.isEnabled(SPConfig::Listener))
+        conf.getServiceProvider()->regListener("org.project-moonshot.shibresolver", &g_Remoted);
+#endif
     return 0;   // signal success
 }
 
