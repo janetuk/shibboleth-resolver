@@ -245,6 +245,15 @@ AC_TRY_LINK(
     [AC_DEFINE(HAVE_SHIBSP,1,[Define if Shibboleth SP library was found])],
     [AC_MSG_ERROR([unable to link with Shibboleth SP])])
 
+AC_MSG_CHECKING([whether SP library supports non-plugin remoting])
+AC_TRY_COMPILE([#include <shibsp/ServiceProvider.hpp>],
+    [shibsp::ServiceProvider* sp;
+     sp->regListener(NULL,NULL);
+    ],
+    [AC_MSG_RESULT([yes])]
+    [AC_DEFINE([SHIBRESOLVER_SHIBSP_HAS_REMOTING], [1], [Define to 1 if Shibboleth SP supports non-plugin remoting.])],
+    [AC_MSG_RESULT([no])])
+
 # restore master libs
 LIBS="$save_LIBS"
 
@@ -254,7 +263,7 @@ AC_SUBST(XMLSEC_LIBS)
 AC_CONFIG_FILES([resolver.spec Portfile])
 
 # output the underlying makefiles
-AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile shibresolver/Makefile])
 
 LIBTOOL="$LIBTOOL --silent"
 
