@@ -5,7 +5,11 @@ lib_LTLIBRARIES = libshibresolver.la libshibresolver-lite.la
 libshibresolverincludedir = $(includedir)/shibresolver
 
 libshibresolverinclude_HEADERS = \
+	base.h \
 	resolver.h
+
+noinst_HEADERS = \
+	internal.h
 
 common_sources = \
 	resolver.cpp
