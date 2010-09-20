@@ -53,6 +53,8 @@ ShibbolethResolver* ShibbolethResolver::create()
 
 ShibbolethResolver::ShibbolethResolver()
 {
+    m_mapper = NULL;
+    m_sp = NULL;
 }
 
 ShibbolethResolver::~ShibbolethResolver()
