@@ -121,6 +121,27 @@ void RemotedResolver::receive(DDF& in, ostream& out)
 {
 }
 
+bool ShibbolethResolver::init(unsigned long features, const char* config, bool rethrow)
+{
+    SPConfig::getConfig().setFeatures(features | SPConfig::AttributeResolution | SPConfig::Metadata | SPConfig::Trust);
+    if (!SPConfig::getConfig().init())
+        return false;
+    if (!SPConfig::getConfig().instantiate(config, rethrow))
+        return false;
+    return true;
+}
+
+/**
+    * Shuts down runtime.
+    *
+    * Each process using the library SHOULD call this function exactly once before terminating itself.
+    */
+void ShibbolethResolver::term()
+{
+    SPConfig::getConfig().term();
+}
+
+
 extern "C" int SHIBRESOLVER_EXPORTS xmltooling_extension_init(void*)
 {
 #ifdef SHIBRESOLVER_SHIBSP_HAS_REMOTING
