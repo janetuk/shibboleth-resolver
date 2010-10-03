@@ -120,6 +120,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImportLibrary>$(TargetDir)$(ProjectName)1D.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml2\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,6 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <ImportLibrary>$(TargetDir)$(ProjectName)1.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml2\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

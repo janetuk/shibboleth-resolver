@@ -35,16 +35,9 @@ namespace xmltooling {
     class XMLTOOL_API XMLObject;
 };
 
-#ifndef SHIBSP_LITE
-namespace opensaml {
-    namespace saml2 {
-        class SAML_API Assertion;
-    };
-};
-#endif
-
 namespace shibsp {
     class SHIBSP_API Attribute;
+    class SHIBSP_API SPRequest;
 };
 
 namespace shibresolver {
@@ -66,12 +59,12 @@ namespace shibresolver {
         virtual ~ShibbolethResolver();
 
         /**
-         * Sets the calling service URI, making the Shibboleth SP responsible for
+         * Sets the calling service request, making the Shibboleth SP responsible for
          * mapping the service to an Application instance.
          *
-         * @param uri identifies the service performing attribute resolution
+         * @param request identifies the service request performing attribute resolution
          */
-        void setServiceURI(const char* uri);
+        void setRequest(const shibsp::SPRequest* request);
 
         /**
          * Sets the application ID to use for resolution, bypassing the mapping
@@ -89,23 +82,16 @@ namespace shibresolver {
         void setIssuer(const char* issuer);
 
         /**
-         * Adds a SAML token as input to the resolver.
+         * Adds an XML token as input to the resolver, generally a SAML assertion.
          * <p>The caller retains ownership of the object.
          *
          * @param token an input token to evaluate
          */
-        void addToken(
-#ifdef SHIBSP_LITE
-            const xmltooling::XMLObject* token
-#else
-            const opensaml::saml2::Assertion* token
-#endif
-            );
+        void addToken(const xmltooling::XMLObject* token);
 
         /**
          * Adds an Attribute as input to the resolver.
-         * <p>The caller retains ownership of the object, but it MAY be modified
-         * during the resolution process.
+         * <p>The caller retains ownership of the object.
          *
          * @param attr  an input Attribute
          */
@@ -168,8 +154,8 @@ namespace shibresolver {
         static ShibbolethResolver* create();
 
     protected:
-        /** Service URI */
-        std::string m_serviceURI;
+        /** Service request. */
+        const shibsp::SPRequest* m_request;
 
         /** Application ID. */
         std::string m_appID;
@@ -178,18 +164,13 @@ namespace shibresolver {
         std::string m_issuer;
 
         /** Input tokens. */
-#ifdef SHIBSP_LITE
         std::vector<const xmltooling::XMLObject*> m_tokens;
-#else
-        std::vector<const opensaml::saml2::Assertion*> m_tokens;
-#endif
+
         /** Input attributes. */
         std::vector<shibsp::Attribute*> m_inputAttributes;
 
     private:
         shibsp::ServiceProvider* m_sp;
-        shibsp::RequestMapper* m_mapper;
-        shibsp::RequestMapper::Settings m_settings;
         std::vector<shibsp::Attribute*> m_resolvedAttributes;
     };
 
