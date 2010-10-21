@@ -281,10 +281,10 @@ void RemotedResolver::resolve(
     pair<const EntityDescriptor*,const RoleDescriptor*> entity = pair<const EntityDescriptor*,const RoleDescriptor*>(nullptr,nullptr);
     MetadataProvider* m = app.getMetadataProvider();
     Locker locker(m);
-    if (issuer) {
+    if (issuer && *issuer) {
         // Use metadata to locate the IdP's SSO service.
         MetadataProviderCriteria mc(app, issuer, &IDPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
-        entity=m->getEntityDescriptor(mc);
+        entity = m->getEntityDescriptor(mc);
         if (!entity.first) {
             log.warn("unable to locate metadata for provider (%s)", issuer);
             throw MetadataException("Unable to locate metadata for identity provider ($entityID)", namedparams(1, "entityID", issuer));
@@ -300,7 +300,7 @@ void RemotedResolver::resolve(
     AttributeExtractor* extractor = app.getAttributeExtractor();
     if (extractor) {
         Locker extlocker(extractor);
-        if (issuer) {
+        if (entity.second) {
             pair<bool,const char*> mprefix = app.getString("metadataAttributePrefix");
             if (mprefix.first) {
                 log.debug("extracting metadata-derived attributes...");
