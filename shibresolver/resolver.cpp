@@ -282,16 +282,14 @@ void RemotedResolver::resolve(
     MetadataProvider* m = app.getMetadataProvider();
     Locker locker(m);
     if (issuer && *issuer) {
-        // Use metadata to locate the IdP's SSO service.
+        // Lookup metadata for the issuer.
         MetadataProviderCriteria mc(app, issuer, &IDPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
         entity = m->getEntityDescriptor(mc);
         if (!entity.first) {
             log.warn("unable to locate metadata for provider (%s)", issuer);
-            throw MetadataException("Unable to locate metadata for identity provider ($entityID)", namedparams(1, "entityID", issuer));
         }
         else if (!entity.second) {
             log.warn("unable to locate SAML 2.0 identity provider role for provider (%s)", issuer);
-            throw MetadataException("Unable to locate SAML 2.0 identity provider role for provider ($entityID)", namedparams(1, "entityID", issuer));
         }
     }
 
