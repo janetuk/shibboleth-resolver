@@ -278,7 +278,7 @@ void RemotedResolver::resolve(
 {
 #ifndef SHIBSP_LITE
     Category& log = Category::getInstance(SHIBRESOLVER_LOGCAT);
-    pair<const EntityDescriptor*,const RoleDescriptor*> entity = pair<const EntityDescriptor*,const RoleDescriptor*>(nullptr,nullptr);
+    pair<const EntityDescriptor*,const RoleDescriptor*> entity = pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
     MetadataProvider* m = app.getMetadataProvider();
     Locker locker(m);
     if (issuer && *issuer) {
@@ -303,8 +303,8 @@ void RemotedResolver::resolve(
             if (mprefix.first) {
                 log.debug("extracting metadata-derived attributes...");
                 try {
-                    // We pass nullptr for "issuer" because the IdP isn't the one asserting metadata-based attributes.
-                    extractor->extractAttributes(app, nullptr, *entity.second, resolvedAttrs);
+                    // We pass NULL for "issuer" because the IdP isn't the one asserting metadata-based attributes.
+                    extractor->extractAttributes(app, NULL, *entity.second, resolvedAttrs);
                     for (vector<Attribute*>::iterator a = resolvedAttrs.begin(); a != resolvedAttrs.end(); ++a) {
                         vector<string>& ids = (*a)->getAliases();
                         for (vector<string>::iterator id = ids.begin(); id != ids.end(); ++id)
@@ -363,9 +363,9 @@ void RemotedResolver::resolve(
                     app,
                     entity.first,
                     samlconstants::SAML20P_NS,
-                    nullptr,
-                    nullptr,
-                    nullptr,
+                    NULL,
+                    NULL,
+                    NULL,
                     &assertions,
                     &inputs
                     )
