@@ -93,10 +93,10 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)1_0</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)1_0D</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)1_0</TargetName>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.;..;C:\cvs\2.0\cpp-xmltooling;C:\cvs\2.0\cpp-opensaml2;C:\cvs\2.0\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.;..;C:\cvs\2.0\cpp-xmltooling;C:\cvs\2.0\cpp-opensaml2;C:\cvs\2.0\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.;..;C:\cvs\2.0\cpp-xmltooling;C:\cvs\2.0\cpp-opensaml2;C:\cvs\2.0\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.;..;C:\cvs\2.0\cpp-xmltooling;C:\cvs\2.0\cpp-opensaml2;C:\cvs\2.0\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

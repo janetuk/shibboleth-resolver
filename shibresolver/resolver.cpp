@@ -278,7 +278,7 @@ void RemotedResolver::resolve(
 {
 #ifndef SHIBSP_LITE
     Category& log = Category::getInstance(SHIBRESOLVER_LOGCAT);
-    pair<const EntityDescriptor*,const RoleDescriptor*> entity = pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
+    pair<const EntityDescriptor*,const RoleDescriptor*> entity = make_pair((EntityDescriptor*)NULL, (RoleDescriptor*)NULL);
     MetadataProvider* m = app.getMetadataProvider();
     Locker locker(m);
     if (issuer && *issuer) {
