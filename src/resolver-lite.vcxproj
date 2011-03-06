@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base.h" />
-    <ClInclude Include="internal.h" />
-    <ClInclude Include="resolver.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="shibresolver\base.h" />
+    <ClInclude Include="shibresolver\internal.h" />
+    <ClInclude Include="shibresolver\resolver.h" />
+    <ClInclude Include="shibresolver\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="resolver.cpp" />
+    <ClCompile Include="shibresolver\resolver.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resolver.rc" />
+    <ResourceCompile Include="shibresolver\resolver.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{36D4FABF-ACDE-4947-9C4A-7AE1B50CD83B}</ProjectGuid>
@@ -93,10 +93,10 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)1_0</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)1_0D</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)1_0</TargetName>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml2;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml;..\..\cpp-sp;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.;..\..\cpp-xmltooling;..\..\cpp-opensaml;..\..\cpp-sp;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,7 +119,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImportLibrary>$(TargetDir)$(ProjectName)1D.lib</ImportLibrary>
-      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml2\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -140,7 +140,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ImportLibrary>$(TargetDir)$(ProjectName)1.lib</ImportLibrary>
-      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml2\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\cpp-sp\$(Configuration);..\..\cpp-opensaml\$(Configuration);..\..\cpp-xmltooling\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

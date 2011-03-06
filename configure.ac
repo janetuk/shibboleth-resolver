@@ -21,7 +21,7 @@ fi
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([resolver.spec Portfile])
-AC_CONFIG_FILES([Makefile doc/Makefile src/shibresolver/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile src/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])

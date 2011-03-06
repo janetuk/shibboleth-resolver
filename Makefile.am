@@ -2,9 +2,9 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = doc shibresolver
+SUBDIRS = doc src
 
-DIST_SUBDIRS = doc shibresolver
+DIST_SUBDIRS = doc src
 
 GENFILES = resolver.spec Portfile
 
