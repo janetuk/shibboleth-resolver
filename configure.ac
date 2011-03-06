@@ -1,6 +1,6 @@
 AC_PREREQ([2.50])
-AC_INIT([shibboleth-resolver], [0.1], [MOONSHOT-COMMUNITY@JISCMAIL.AC.UK], [shibboleth-resolver])
-AC_CONFIG_SRCDIR(shibresolver)
+AC_INIT([shibboleth-resolver], [0.2], [MOONSHOT-COMMUNITY@JISCMAIL.AC.UK], [shibboleth-resolver])
+AC_CONFIG_SRCDIR(src)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
@@ -21,7 +21,7 @@ fi
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([resolver.spec Portfile])
-AC_CONFIG_FILES([Makefile doc/Makefile shibresolver/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile src/shibresolver/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])
@@ -257,7 +257,11 @@ AC_LINK_IFELSE(
 
 AC_MSG_CHECKING([whether SP library supports non-plugin remoting])
 AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM([[#include <shibsp/ServiceProvider.hpp>]],
+    [AC_LANG_PROGRAM(
+    [[
+#include <vector>
+#include <shibsp/ServiceProvider.h>
+    ]],
     [[shibsp::ServiceProvider* sp; sp->regListener(NULL,NULL);]])],
     [AC_MSG_RESULT([yes])AC_DEFINE([SHIBRESOLVER_SHIBSP_HAS_REMOTING],[1],[Define to 1 if Shibboleth SP supports non-plugin remoting.])],
     [AC_MSG_RESULT([no])])
