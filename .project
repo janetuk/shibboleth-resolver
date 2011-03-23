@@ -3,6 +3,10 @@
 	<name>cpp-sp-resolver</name>
 	<comment></comment>
 	<projects>
+		<project>cpp-log4shib</project>
+		<project>cpp-opensaml</project>
+		<project>cpp-sp</project>
+		<project>cpp-xmltooling</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

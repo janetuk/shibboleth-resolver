@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shibresolver\base.h" />
+    <ClInclude Include="shibresolver\config_pub_win32.h" />
     <ClInclude Include="shibresolver\internal.h" />
     <ClInclude Include="shibresolver\resolver.h" />
     <ClInclude Include="shibresolver\resource.h" />

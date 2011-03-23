@@ -6,6 +6,7 @@ libshibresolverincludedir = $(includedir)/shibresolver
 
 libshibresolverinclude_HEADERS = \
 	shibresolver/base.h \
+	shibresolver/config_pub.h \
 	shibresolver/resolver.h
 
 noinst_HEADERS = \
@@ -32,5 +33,7 @@ install-exec-hook:
 EXTRA_DIST = \
 	resolver.vcxproj \
 	resolver-lite.vcxproj \
+	shibresolver/config_pub.h.in \
+	shibresolver/config_pub_win32.h \
 	shibresolver/resource.h \
 	shibresolver/resolver.rc

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 JANET(UK)
+ *  Copyright 2011 JANET(UK)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,13 @@
 #define __shibresolver_base_h__
 
 #include <shibsp/base.h>
+
+
+#if defined (_MSC_VER) || defined(__BORLANDC__)
+  #include <shibresolver/config_pub_win32.h>
+#else
+  #include <shibresolver/config_pub.h>
+#endif
 
 // Windows and GCC4 Symbol Visibility Macros
 #ifdef WIN32

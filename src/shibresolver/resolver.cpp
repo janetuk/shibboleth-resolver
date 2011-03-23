@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 JANET(UK)
+ *  Copyright 2010-2011 JANET(UK)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 
 #include <shibsp/exceptions.h>
 #include <shibsp/Application.h>
+#include <shibsp/GSSRequest.h>
 #include <shibsp/SPRequest.h>
 #include <shibsp/ServiceProvider.h>
 #include <shibsp/attribute/Attribute.h>
@@ -41,8 +42,10 @@
 #endif
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/util/ParserPool.h>
 #include <xmltooling/util/XMLHelper.h>
+#include <xercesc/util/Base64.hpp>
 
 using namespace shibresolver;
 using namespace shibsp;
@@ -90,11 +93,17 @@ ShibbolethResolver* ShibbolethResolver::create()
 }
 
 ShibbolethResolver::ShibbolethResolver() : m_request(NULL), m_sp(NULL)
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
+        ,m_gsswrapper(NULL)
+#endif
 {
 }
 
 ShibbolethResolver::~ShibbolethResolver()
 {
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
+    delete m_gsswrapper;
+#endif
     for_each(m_resolvedAttributes.begin(), m_resolvedAttributes.end(), xmltooling::cleanup<Attribute>());
     if (m_sp)
         m_sp->unlock();
@@ -103,6 +112,14 @@ ShibbolethResolver::~ShibbolethResolver()
 void ShibbolethResolver::setRequest(const SPRequest* request)
 {
     m_request = request;
+#if defined(SHIBSP_HAVE_GSSAPI) && defined (SHIBRESOLVER_HAVE_GSSAPI)
+    if (request) {
+        const GSSRequest* gss = dynamic_cast<const GSSRequest*>(request);
+        if (gss) {
+            addToken(gss->getGSSContext());
+        }
+    }
+#endif
 }
 
 void ShibbolethResolver::setApplicationID(const char* appID)
@@ -124,6 +141,47 @@ void ShibbolethResolver::addToken(const XMLObject* token)
     if (token)
         m_tokens.push_back(token);
 }
+
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
+void ShibbolethResolver::addToken(gss_ctx_id_t ctx)
+{
+    if (m_gsswrapper) {
+        delete m_gsswrapper;
+        m_gsswrapper = NULL;
+    }
+
+    if (ctx != GSS_C_NO_CONTEXT) {
+        OM_uint32 minor;
+        gss_buffer_desc contextbuf;
+        contextbuf.length = 0;
+        contextbuf.value = NULL;
+        OM_uint32 major = gss_export_sec_context(&minor, &ctx, &contextbuf);
+        if (major == GSS_S_COMPLETE) {
+            xsecsize_t len=0;
+            XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(contextbuf.value), contextbuf.length, &len);
+            if (out) {
+                string s;
+                s.append(reinterpret_cast<char*>(out), len);
+                auto_ptr_XMLCh temp(s.c_str());
+#ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
+                XMLString::release(&out);
+#else
+                XMLString::release((char**)&out);
+#endif
+                static const XMLCh _GSSAPI[] = UNICODE_LITERAL_6(G,S,S,A,P,I);
+                m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
+                m_gsswrapper->setTextContent(temp.get());
+            }
+            else {
+                Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
+            }
+        }
+        else {
+            Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS context");
+        }
+    }
+}
+#endif
 
 void ShibbolethResolver::addAttribute(Attribute* attr)
 {
@@ -157,6 +215,11 @@ void ShibbolethResolver::resolve()
     const Application* app = m_request ? &(m_request->getApplication()) : m_sp->getApplication(m_appID.c_str());
     if (!app)
         throw ConfigurationException("Unable to locate application for resolution.");
+
+#ifdef HAVE_GSSAPI
+    if (m_gsswrapper)
+        m_tokens.push_back(m_gsswrapper);
+#endif
 
     if (conf.isEnabled(SPConfig::OutOfProcess)) {
         g_Remoted.resolve(

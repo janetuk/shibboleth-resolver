@@ -26,6 +26,11 @@
 							<tool id="org.eclipse.linuxtools.cdt.autotools.gnu.toolchain.tool.configure.1683701533" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.gnu.toolchain.tool.configure">
 								<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.prefix.26305207" name="Arch-independent install directory (--prefix)" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.prefix" value="/Users/scantor/Documents/workspace/2.0/install" valueType="string"/>
 								<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.user.1607291625" name="User-specified configuration options" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.user" value="--enable-debug --with-log4shib=/opt/local --with-xmltooling=/Users/scantor/Documents/workspace/2.0/install" valueType="string"/>
+								<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.includes.1450899039" name="includes" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cpp-xmltooling}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cpp-opensaml}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cpp-sp}&quot;"/>
+								</option>
 								<inputType id="org.eclipse.linuxtools.cdt.autotools.inputType.configure.1359986111" superClass="org.eclipse.linuxtools.cdt.autotools.inputType.configure"/>
 								<inputType id="org.eclipse.linuxtools.cdt.autotools.inputType.configure1.707690559" superClass="org.eclipse.linuxtools.cdt.autotools.inputType.configure1"/>
 							</tool>
@@ -33,9 +38,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/shibresolver"/>
-						<entry excluding="shibresolver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry excluding="src|shibresolver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="shibresolver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/shibresolver"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

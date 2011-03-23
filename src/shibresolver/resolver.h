@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 JANET(UK)
+ *  Copyright 2010-2011 JANET(UK)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,15 @@
 
 #include <string>
 #include <vector>
+
+#ifdef SHIBRESOLVER_HAVE_GSSGNU
+# include <gss.h>
+#elif defined SHIBRESOLVER_HAVE_GSSMIT
+# include <gssapi/gssapi.h>
+# include <gssapi/gssapi_generic.h>
+#else
+# include <gssapi.h>
+#endif
 
 namespace xmltooling {
     class XMLTOOL_API XMLObject;
@@ -88,6 +97,16 @@ namespace shibresolver {
          * @param token an input token to evaluate
          */
         void addToken(const xmltooling::XMLObject* token);
+
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
+        /**
+         * Adds a GSS-API security context as input to the resolver.
+         * <p>The caller retains ownership of the context.
+         *
+         * @param ctx an input context to evaluate
+         */
+        void addToken(gss_ctx_id_t ctx);
+#endif
 
         /**
          * Adds an Attribute as input to the resolver.
@@ -171,6 +190,9 @@ namespace shibresolver {
 
     private:
         shibsp::ServiceProvider* m_sp;
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
+        xmltooling::XMLObject* m_gsswrapper;
+#endif
         std::vector<shibsp::Attribute*> m_resolvedAttributes;
     };
 
