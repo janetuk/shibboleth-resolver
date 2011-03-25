@@ -342,9 +342,12 @@ void RemotedResolver::resolve(
 #ifndef SHIBSP_LITE
     Category& log = Category::getInstance(SHIBRESOLVER_LOGCAT);
     pair<const EntityDescriptor*,const RoleDescriptor*> entity = make_pair((EntityDescriptor*)NULL, (RoleDescriptor*)NULL);
-    MetadataProvider* m = app.getMetadataProvider();
+    MetadataProvider* m = app.getMetadataProvider(false);
     Locker locker(m);
-    if (issuer && *issuer) {
+    if (!m) {
+        log.warn("no metadata providers are configured");
+    }
+    else if (issuer && *issuer) {
         // Lookup metadata for the issuer.
         MetadataProviderCriteria mc(app, issuer, &IDPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
         entity = m->getEntityDescriptor(mc);
