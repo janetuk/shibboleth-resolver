@@ -116,7 +116,9 @@ void ShibbolethResolver::setRequest(const SPRequest* request)
     if (request) {
         const GSSRequest* gss = dynamic_cast<const GSSRequest*>(request);
         if (gss) {
-            addToken(gss->getGSSContext());
+            // TODO: fix API to prevent destruction of contexts
+            gss_ctx_id_t ctx = gss->getGSSContext();
+            addToken(&ctx);
         }
     }
 #endif
@@ -143,42 +145,47 @@ void ShibbolethResolver::addToken(const XMLObject* token)
 }
 
 #ifdef SHIBRESOLVER_HAVE_GSSAPI
-void ShibbolethResolver::addToken(gss_ctx_id_t ctx)
+void ShibbolethResolver::addToken(gss_ctx_id_t* ctx)
 {
     if (m_gsswrapper) {
         delete m_gsswrapper;
         m_gsswrapper = NULL;
     }
 
-    if (ctx != GSS_C_NO_CONTEXT) {
-        OM_uint32 minor;
-        gss_buffer_desc contextbuf;
-        contextbuf.length = 0;
-        contextbuf.value = NULL;
-        OM_uint32 major = gss_export_sec_context(&minor, &ctx, &contextbuf);
+    if (ctx && *ctx != GSS_C_NO_CONTEXT) {
+        OM_uint32 major, minor;
+        gss_buffer_desc contextbuf = GSS_C_EMPTY_BUFFER;
+
+        major = gss_export_sec_context(&minor, ctx, &contextbuf);
         if (major == GSS_S_COMPLETE) {
-            xsecsize_t len=0;
-            XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(contextbuf.value), contextbuf.length, &len);
-            if (out) {
-                string s;
-                s.append(reinterpret_cast<char*>(out), len);
-                auto_ptr_XMLCh temp(s.c_str());
-#ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
-                XMLString::release(&out);
-#else
-                XMLString::release((char**)&out);
-#endif
-                static const XMLCh _GSSAPI[] = UNICODE_LITERAL_6(G,S,S,A,P,I);
-                m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
-                m_gsswrapper->setTextContent(temp.get());
-            }
-            else {
-                Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
-            }
+            addToken(&contextbuf);
+            gss_release_buffer(&minor, &contextbuf);
         }
         else {
             Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS context");
         }
+    }
+}
+
+void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
+{
+    xsecsize_t len=0;
+    XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(contextbuf->value), contextbuf->length, &len);
+    if (out) {
+        string s;
+        s.append(reinterpret_cast<char*>(out), len);
+        auto_ptr_XMLCh temp(s.c_str());
+#ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
+        XMLString::release(&out);
+#else
+        XMLString::release((char**)&out);
+#endif
+        static const XMLCh _GSSAPI[] = UNICODE_LITERAL_6(G,S,S,A,P,I);
+        m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
+        m_gsswrapper->setTextContent(temp.get());
+    }
+    else {
+        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
     }
 }
 #endif
