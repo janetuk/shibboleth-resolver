@@ -157,6 +157,7 @@ void ShibbolethResolver::addToken(gss_ctx_id_t ctx)
         major = gss_export_sec_context(&minor, &ctx, &contextbuf);
         if (major == GSS_S_COMPLETE) {
             addToken(&contextbuf);
+            gss_release_buffer(&minor, &contextbuf);
         } else {
             Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS context");
         }
