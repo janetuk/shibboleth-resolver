@@ -169,6 +169,11 @@ void ShibbolethResolver::addToken(gss_ctx_id_t* ctx)
 
 void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
 {
+    if (m_gsswrapper) {
+        delete m_gsswrapper;
+        m_gsswrapper = NULL;
+    }
+
     xsecsize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(contextbuf->value), contextbuf->length, &len);
     if (out) {
@@ -180,7 +185,7 @@ void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
 #else
         XMLString::release((char**)&out);
 #endif
-        static const XMLCh _GSSAPI[] = UNICODE_LITERAL_6(G,S,S,A,P,I);
+        static const XMLCh _GSSAPI[] = UNICODE_LITERAL_13(G,S,S,A,P,I,C,o,n,t,e,x,t);
         m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
         m_gsswrapper->setTextContent(temp.get());
     }
@@ -223,7 +228,7 @@ void ShibbolethResolver::resolve()
     if (!app)
         throw ConfigurationException("Unable to locate application for resolution.");
 
-#ifdef HAVE_GSSAPI
+#ifdef SHIBRESOLVER_HAVE_GSSAPI
     if (m_gsswrapper)
         m_tokens.push_back(m_gsswrapper);
 #endif
