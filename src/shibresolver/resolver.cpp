@@ -22,6 +22,10 @@
 
 #include "internal.h"
 
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+# include <gssapi/gssapi_ext.h>
+#endif
+
 #include <shibsp/exceptions.h>
 #include <shibsp/Application.h>
 #include <shibsp/GSSRequest.h>
@@ -193,6 +197,45 @@ void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
         Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
     }
 }
+
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+void ShibbolethResolver::addToken(gss_name_t name)
+{
+    if (m_gsswrapper) {
+        delete m_gsswrapper;
+        m_gsswrapper = NULL;
+    }
+
+    OM_uint32 major, minor;
+    gss_buffer_desc namebuf = GSS_C_EMPTY_BUFFER;
+
+    major = gss_export_name_composite(&minor, name, &namebuf);
+    if (major == GSS_S_COMPLETE) {
+        xsecsize_t len=0;
+        XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(namebuf.value), namebuf.length, &len);
+        if (out) {
+            string s;
+            s.append(reinterpret_cast<char*>(out), len);
+            auto_ptr_XMLCh temp(s.c_str());
+    #ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
+            XMLString::release(&out);
+    #else
+            XMLString::release((char**)&out);
+    #endif
+            static const XMLCh _GSSAPI[] = UNICODE_LITERAL_10(G,S,S,A,P,I,N,a,m,e);
+            m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
+            m_gsswrapper->setTextContent(temp.get());
+        }
+        else {
+            Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS name");
+        }
+        gss_release_buffer(&minor, &namebuf);
+    }
+    else {
+        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS name");
+    }
+}
+#endif
 #endif
 
 void ShibbolethResolver::addAttribute(Attribute* attr)
@@ -353,21 +396,45 @@ void RemotedResolver::resolve(
 {
 #ifndef SHIBSP_LITE
     Category& log = Category::getInstance(SHIBRESOLVER_LOGCAT);
+    string issuerstr(issuer ? issuer : "");
     pair<const EntityDescriptor*,const RoleDescriptor*> entity = make_pair((EntityDescriptor*)NULL, (RoleDescriptor*)NULL);
     MetadataProvider* m = app.getMetadataProvider(false);
     Locker locker(m);
     if (!m) {
         log.warn("no metadata providers are configured");
     }
-    else if (issuer && *issuer) {
-        // Lookup metadata for the issuer.
-        MetadataProviderCriteria mc(app, issuer, &IDPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
-        entity = m->getEntityDescriptor(mc);
-        if (!entity.first) {
-            log.warn("unable to locate metadata for provider (%s)", issuer);
+    else {
+        if (!issuerstr.empty()) {
+            // Attempt to locate an issuer based on input token.
+            for (vector<const XMLObject*>::const_iterator t = tokens.begin(); t!=tokens.end(); ++t) {
+                const saml2::Assertion* assertion = dynamic_cast<const saml2::Assertion*>(*t);
+                if (assertion && assertion->getIssuer()) {
+                    auto_ptr_char iss(assertion->getIssuer()->getName());
+                    if (iss.get() && *iss.get()) {
+                        issuerstr = iss.get();
+                        break;
+                    }
+                }
+            }
+            if (!issuerstr.empty()) {
+                log.info("setting issuer based on input token (%s)", issuerstr.c_str());
+            }
         }
-        else if (!entity.second) {
-            log.warn("unable to locate SAML 2.0 identity provider role for provider (%s)", issuer);
+
+        if (!issuerstr.empty()) {
+            // Lookup metadata for the issuer.
+            MetadataProviderCriteria idpmc(app, issuerstr.c_str(), &IDPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
+            entity = m->getEntityDescriptor(idpmc);
+            if (!entity.first) {
+                log.warn("unable to locate metadata for provider (%s)", issuerstr.c_str());
+            }
+            else if (!entity.second) {
+                MetadataProviderCriteria aamc(app, issuerstr.c_str(), &AttributeAuthorityDescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
+                entity = m->getEntityDescriptor(aamc);
+                if (!entity.second) {
+                    log.warn("unable to locate SAML 2.0 IdP or AA role for provider (%s)", issuerstr.c_str());
+                }
+            }
         }
     }
 

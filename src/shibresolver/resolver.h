@@ -114,7 +114,17 @@ namespace shibresolver {
          *
          * @param ctx an input exported security context to evaluate
          */
-        void addToken(gss_buffer_t token);
+        void addToken(const gss_buffer_t token);
+
+# ifndef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+        /**
+         * Adds a GSS-API mechanism name as input to the resolver.
+         * <p>The caller retains ownership of the name.
+         *
+         * @param name an input mechanism name to evaluate
+         */
+        void addToken(gss_name_t name);
+# endif
 #endif
 
         /**
