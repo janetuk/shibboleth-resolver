@@ -157,12 +157,28 @@ void ShibbolethResolver::addToken(gss_ctx_id_t* ctx)
     }
 
     if (ctx && *ctx != GSS_C_NO_CONTEXT) {
-        OM_uint32 major, minor;
+        OM_uint32 minor;
         gss_buffer_desc contextbuf = GSS_C_EMPTY_BUFFER;
-
-        major = gss_export_sec_context(&minor, ctx, &contextbuf);
+        OM_uint32 major = gss_export_sec_context(&minor, ctx, &contextbuf);
         if (major == GSS_S_COMPLETE) {
-            addToken(&contextbuf);
+            xsecsize_t len=0;
+            XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(contextbuf.value), contextbuf.length, &len);
+            if (out) {
+                string s;
+                s.append(reinterpret_cast<char*>(out), len);
+                auto_ptr_XMLCh temp(s.c_str());
+#ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
+                XMLString::release(&out);
+#else
+                XMLString::release((char**)&out);
+#endif
+                static const XMLCh _GSSAPI[] = UNICODE_LITERAL_13(G,S,S,A,P,I,C,o,n,t,e,x,t);
+                m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
+                m_gsswrapper->setTextContent(temp.get());
+            }
+            else {
+                Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
+            }
             gss_release_buffer(&minor, &contextbuf);
         }
         else {
@@ -170,6 +186,27 @@ void ShibbolethResolver::addToken(gss_ctx_id_t* ctx)
         }
     }
 }
+
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
+void ShibbolethResolver::addToken(gss_name_t name)
+{
+    if (m_gsswrapper) {
+        delete m_gsswrapper;
+        m_gsswrapper = NULL;
+    }
+
+    OM_uint32 minor;
+    gss_buffer_desc namebuf = GSS_C_EMPTY_BUFFER;
+    OM_uint32 major = gss_export_name_composite(&minor, name, &namebuf);
+    if (major == GSS_S_COMPLETE) {
+        addToken(&namebuf);
+        gss_release_buffer(&minor, &namebuf);
+    }
+    else {
+        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS name");
+    }
+}
+#endif
 
 void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
 {
@@ -189,53 +226,15 @@ void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
 #else
         XMLString::release((char**)&out);
 #endif
-        static const XMLCh _GSSAPI[] = UNICODE_LITERAL_13(G,S,S,A,P,I,C,o,n,t,e,x,t);
+        static const XMLCh _GSSAPI[] = UNICODE_LITERAL_10(G,S,S,A,P,I,N,a,m,e);
         m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
         m_gsswrapper->setTextContent(temp.get());
     }
     else {
-        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS context");
+        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS name");
     }
 }
 
-#ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
-void ShibbolethResolver::addToken(gss_name_t name)
-{
-    if (m_gsswrapper) {
-        delete m_gsswrapper;
-        m_gsswrapper = NULL;
-    }
-
-    OM_uint32 major, minor;
-    gss_buffer_desc namebuf = GSS_C_EMPTY_BUFFER;
-
-    major = gss_export_name_composite(&minor, name, &namebuf);
-    if (major == GSS_S_COMPLETE) {
-        xsecsize_t len=0;
-        XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(namebuf.value), namebuf.length, &len);
-        if (out) {
-            string s;
-            s.append(reinterpret_cast<char*>(out), len);
-            auto_ptr_XMLCh temp(s.c_str());
-    #ifdef SHIBSP_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&out);
-    #else
-            XMLString::release((char**)&out);
-    #endif
-            static const XMLCh _GSSAPI[] = UNICODE_LITERAL_10(G,S,S,A,P,I,N,a,m,e);
-            m_gsswrapper = new AnyElementImpl(shibspconstants::SHIB2ATTRIBUTEMAP_NS, _GSSAPI);
-            m_gsswrapper->setTextContent(temp.get());
-        }
-        else {
-            Category::getInstance(SHIBRESOLVER_LOGCAT).error("error while base64-encoding GSS name");
-        }
-        gss_release_buffer(&minor, &namebuf);
-    }
-    else {
-        Category::getInstance(SHIBRESOLVER_LOGCAT).error("error exporting GSS name");
-    }
-}
-#endif
 #endif
 
 void ShibbolethResolver::addAttribute(Attribute* attr)

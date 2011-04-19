@@ -100,21 +100,13 @@ namespace shibresolver {
 
 #ifdef SHIBRESOLVER_HAVE_GSSAPI
         /**
-         * Adds a GSS-API security context as input to the resolver.
-         * <p>The caller loses ownership of the context.
-         *
-         * @param ctx an input context to evaluate
-         */
-        void addToken(gss_ctx_id_t* ctx);
-
-        /**
-         * Adds a GSS-API exported security context as input to
+         * Adds a GSS-API exported mechanism name as input to
          * the resolver.
          * <p>The caller retains ownership of the buffer.
          *
-         * @param ctx an input exported security context to evaluate
+         * @param ctx an input exported mechanism name to evaluate
          */
-        void addToken(const gss_buffer_t token);
+        void addToken(const gss_buffer_t name);
 
 # ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
         /**
@@ -125,6 +117,14 @@ namespace shibresolver {
          */
         void addToken(gss_name_t name);
 # endif
+
+        /**
+         * Adds a GSS-API security context as input to the resolver.
+         * <p>The caller loses ownership of the context.
+         *
+         * @param ctx an input context to evaluate
+         */
+        void addToken(gss_ctx_id_t* ctx);
 #endif
 
         /**
