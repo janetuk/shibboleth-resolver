@@ -402,19 +402,7 @@ if test x"$want_gss" = xyes; then
   AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM([[#include <gssapi/gssapi_ext.h>]],
     [[gss_get_name_attribute(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);]])],
-    [AC_MSG_RESULT([yes])AC_DEFINE([HAVE_GSSAPI_NAMINGEXTS],[1],[Define to 1 if GSS-API naming extensions are available.])],
-    [AC_MSG_RESULT([no])])
-
-  AC_MSG_CHECKING([whether GSS-API composite name import is available])
-  AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM([[#include <gssapi/gssapi_ext.h>]],
-    [[
-    OM_uint32 minor;
-    gss_name_t srcname;
-    gss_buffer_desc importbuf;
-    gss_import_name(&minor, &importbuf, GSS_C_NT_EXPORT_NAME_COMPOSITE, &srcname);
-    ]])],
-    [AC_MSG_RESULT([yes])AC_DEFINE([SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME],[1],[Define to 1 if GSS-API composite name import is available.])],
+    [AC_MSG_RESULT([yes])AC_DEFINE([SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS],[1],[Define to 1 if GSS-API naming extensions are available.])],
     [AC_MSG_RESULT([no])])
 
 else

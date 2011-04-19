@@ -22,7 +22,7 @@
 
 #include "internal.h"
 
-#ifdef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
 # include <gssapi/gssapi_ext.h>
 #endif
 
@@ -198,7 +198,7 @@ void ShibbolethResolver::addToken(const gss_buffer_t contextbuf)
     }
 }
 
-#ifdef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
 void ShibbolethResolver::addToken(gss_name_t name)
 {
     if (m_gsswrapper) {

@@ -116,7 +116,7 @@ namespace shibresolver {
          */
         void addToken(const gss_buffer_t token);
 
-# ifndef SHIBRESOLVER_HAVE_GSSAPI_COMPOSITE_NAME
+# ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
         /**
          * Adds a GSS-API mechanism name as input to the resolver.
          * <p>The caller retains ownership of the name.
