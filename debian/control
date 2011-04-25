@@ -1,0 +1,33 @@
+Source: shibboleth-resolver
+Priority: extra
+Maintainer: Sam Hartman <hartmans@debian.org>
+Build-Depends: debhelper (>= 7.0.50~), libshibsp-dev (>= 1.5+dfsg~moonshot1),
+    libsaml2-dev (>= 2.4),
+ libxerces-c-dev, libxmltooling-dev (>= 1.4)
+Standards-Version: 3.9.1
+Section: libs
+Vcs-Git: git://git.debian.org/pkg-shibboleth/shibboleth-resolver.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/shibboleth-resolver.git;a=summary
+
+Package: libshibb-resolver-dev
+Section: libdevel
+Architecture: any
+Depends: libshibb-resolver0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Shibboleth SP Attribute Resolver library
+ This package contains a Shibboleth SP Extension that provides
+ externally accessible attribute resolver functionality for processing
+ local and remote sources of federated attribute information.
+ .
+ This package includes files needed for development.
+
+
+Package: libshibb-resolver0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Shibboleth SP Attribute Resolver library
+ This package contains a Shibboleth SP Extension that provides
+ externally accessible attribute resolver functionality for processing
+ local and remote sources of federated attribute information.
+ .
+ This package contains just the shared library.
