@@ -3,7 +3,7 @@ Priority: extra
 Maintainer: Sam Hartman <hartmans@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), libshibsp-dev (>= 1.5+dfsg~moonshot1),
     libsaml2-dev (>= 2.4),
- libxerces-c-dev, libxmltooling-dev (>= 1.4)
+ libxerces-c-dev, libxmltooling-dev (>= 1.4), libkrb5-dev (>= 1.9)
 Standards-Version: 3.9.1
 Section: libs
 Vcs-Git: git://git.debian.org/pkg-shibboleth/shibboleth-resolver.git
