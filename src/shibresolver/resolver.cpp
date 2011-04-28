@@ -23,7 +23,9 @@
 #include "internal.h"
 
 #ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
-# include <gssapi/gssapi_ext.h>
+# ifdef SHIBRESOLVER_HAVE_GSSMIT
+#  include <gssapi/gssapi_ext.h>
+# endif
 #endif
 
 #include <shibsp/exceptions.h>
