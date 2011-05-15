@@ -405,7 +405,7 @@ void RemotedResolver::resolve(
         log.warn("no metadata providers are configured");
     }
     else {
-        if (!issuerstr.empty()) {
+        if (issuerstr.empty()) {
             // Attempt to locate an issuer based on input token.
             for (vector<const XMLObject*>::const_iterator t = tokens.begin(); t!=tokens.end(); ++t) {
                 const saml2::Assertion* assertion = dynamic_cast<const saml2::Assertion*>(*t);
