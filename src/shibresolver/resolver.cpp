@@ -587,14 +587,14 @@ const RoleDescriptor* RemotedResolver::lookup(
 
 bool ShibbolethResolver::init(unsigned long features, const char* config, bool rethrow)
 {
-    if (features && SPConfig::OutOfProcess) {
+    if (features & SPConfig::OutOfProcess) {
 #ifndef SHIBSP_LITE
         features = features | SPConfig::AttributeResolution | SPConfig::Metadata | SPConfig::Trust | SPConfig::Credentials;
 #endif
-        if (!(features && SPConfig::InProcess))
+        if (!(features & SPConfig::InProcess))
             features |= SPConfig::Listener;
     }
-    else if (features && SPConfig::InProcess) {
+    else if (features & SPConfig::InProcess) {
         features |= SPConfig::Listener;
     }
     SPConfig::getConfig().setFeatures(features);
