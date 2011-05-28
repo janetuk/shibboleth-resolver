@@ -26,8 +26,8 @@
 
 #include <shibsp/RequestMapper.h>
 #include <shibsp/SPConfig.h>
+#include <xmltooling/unicode.h>
 
-#include <string>
 #include <vector>
 
 #ifdef SHIBRESOLVER_HAVE_GSSGNU
@@ -88,6 +88,13 @@ namespace shibresolver {
          * @param issuer    entityID of the identity "source", if known
          */
         void setIssuer(const char* issuer);
+
+        /**
+         * Sets the metadata protocol constant to use for resolution.
+         *
+         * @param protocol  metadata protocol constant
+         */
+        void setProtocol(const XMLCh* protocol);
 
         /**
          * Adds an XML token as input to the resolver, generally a SAML assertion.
@@ -199,6 +206,9 @@ namespace shibresolver {
 
         /** Source of identity, if known. */
         std::string m_issuer;
+
+        /** Metadata protocol constant to use. */
+        xmltooling::xstring m_protocol;
 
         /** Input tokens. */
         std::vector<const xmltooling::XMLObject*> m_tokens;
