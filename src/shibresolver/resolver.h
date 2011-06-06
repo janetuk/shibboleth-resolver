@@ -35,7 +35,7 @@
 #elif defined SHIBRESOLVER_HAVE_GSSMIT
 # include <gssapi/gssapi.h>
 # include <gssapi/gssapi_generic.h>
-#else
+#elif defined SHIBRESOLVER_HAVE_GSSAPI
 # include <gssapi.h>
 #endif
 
