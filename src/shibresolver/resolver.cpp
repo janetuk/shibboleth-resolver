@@ -49,6 +49,7 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/util/ParserPool.h>
+#include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 #include <xercesc/util/Base64.hpp>
 
@@ -109,6 +110,9 @@ namespace shibresolver {
     };
 
     static RemotedResolver g_Remoted;
+
+    static int g_initCount = 0;
+    static auto_ptr<Mutex> g_lock(Mutex::create());
 };
 
 ShibbolethResolver* ShibbolethResolver::create()
@@ -587,6 +591,18 @@ const RoleDescriptor* RemotedResolver::lookup(
 
 bool ShibbolethResolver::init(unsigned long features, const char* config, bool rethrow)
 {
+    Lock initLock(g_lock.get());
+
+    if (g_initCount == INT_MAX) {
+        Category::getInstance(SHIBRESOLVER_LOGCAT".Config").crit("library initialized too many times");
+        return false;
+    }
+
+    if (g_initCount >= 1) {
+        ++g_initCount;
+        return true;
+    }
+
     if (features & SPConfig::OutOfProcess) {
 #ifndef SHIBSP_LITE
         features = features | SPConfig::AttributeResolution | SPConfig::Metadata | SPConfig::Trust | SPConfig::Credentials;
@@ -602,16 +618,22 @@ bool ShibbolethResolver::init(unsigned long features, const char* config, bool r
         return false;
     if (!SPConfig::getConfig().instantiate(config, rethrow))
         return false;
+
+    ++g_initCount;
     return true;
 }
 
-/**
-    * Shuts down runtime.
-    *
-    * Each process using the library SHOULD call this function exactly once before terminating itself.
-    */
 void ShibbolethResolver::term()
 {
+    Lock initLock(g_lock.get());
+    if (g_initCount == 0) {
+        Category::getInstance(SHIBRESOLVER_LOGCAT".Config").crit("term without corresponding init");
+        return;
+    }
+    else if (--g_initCount > 0) {
+        return;
+    }
+
     SPConfig::getConfig().term();
 }
 
