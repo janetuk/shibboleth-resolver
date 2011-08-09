@@ -1,3 +1,9 @@
+shibboleth-resolver (0.2-2) unstable; urgency=low
+
+  * Pull in upstream updates
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 09 Aug 2011 13:19:27 -0400
+
 shibboleth-resolver (0.2-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
