@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shibresolver", "shibresolver\resolver.vcxproj", "{36D4FABF-ACDE-4947-9C4A-7AE1B50CD83A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shibresolver-lite", "shibresolver\resolver-lite.vcxproj", "{36D4FABF-ACDE-4947-9C4A-7AE1B50CD83B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3408DF00-FE03-41B1-AB95-9C45FF22DD44}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{3408DF00-FE03-41B1-AB95-9C45FF22DD44}"
 	ProjectSection(SolutionItems) = preProject
 		config_win32.h = config_win32.h
 		configure.ac = configure.ac
@@ -13,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Portfile.in = Portfile.in
 		resolver.spec.in = resolver.spec.in
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shibresolver", "src\resolver.vcxproj", "{36D4FABF-ACDE-4947-9C4A-7AE1B50CD83A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shibresolver-lite", "src\resolver-lite.vcxproj", "{36D4FABF-ACDE-4947-9C4A-7AE1B50CD83B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
