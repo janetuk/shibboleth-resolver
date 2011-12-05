@@ -71,7 +71,7 @@ This package includes files needed for development.
 %setup -q
 
 %build
-%configure %{?options}
+%configure %{?options} --with-gssapi=%{_prefix}
 %{__make} pkgdocdir=%{pkgdocdir}
 
 %install
@@ -95,6 +95,7 @@ This package includes files needed for development.
 %files -n libshibresolver1
 %defattr(-,root,root,-)
 %{_libdir}/libshibresolver.so.*
+%{_libdir}/libshibresolver-lite.so.*
 
 %files -n libshibresolver-devel
 %defattr(-,root,root,-)
