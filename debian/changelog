@@ -4,6 +4,12 @@ shibboleth-resolver (0.3-1) unstable; urgency=low
 
  -- Sam Hartman <hartmans@debian.org>  Tue, 13 Dec 2011 15:25:53 -0500
 
+shibboleth-resolver (0.2-3) unstable; urgency=low
+
+  * Rebuild to catch new dependencies
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 12 Dec 2011 12:25:17 -0500
+
 shibboleth-resolver (0.2-2) unstable; urgency=low
 
   * Pull in upstream updates
