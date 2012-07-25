@@ -1,11 +1,12 @@
-Name:       @PACKAGE_NAME@
-Version:    @PACKAGE_VERSION@
-Summary:	Shibboleth SP Extension to Fizban Whatzit
+Name:		@PACKAGE_NAME@
+Version:	@PACKAGE_VERSION@
+Summary:	Shibboleth SP Attribute Resolver Library
 Release:	1
+Vendor:		Shibboleth Consortium
 Group:		System Environment/Libraries
-License:    Apache 2.0
-URL:		http://shibboleth.internet2.edu/
-Source0:	http://shibboleth.internet2.edu/downloads/extensions/sp/%{name}-%{version}.tar.gz
+License:	Apache 2.0
+URL:		http://shibboleth.net/
+Source0:	http://shibboleth.net/downloads/extensions/sp/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 %if 0%{?suse_version} > 1030
 BuildRequires:  libXerces-c-devel >= 2.8.0
@@ -14,8 +15,8 @@ BuildRequires:  libxerces-c-devel >= 2.8.0
 %endif
 BuildRequires:  libxml-security-c-devel >= 1.4.0
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
-%{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
-BuildRequires:  gcc-c++, libxmltooling-devel, libsaml-devel, shibboleth-devel
+%{!?_with_log4cpp:BuildRequires: liblog4shib-devel >= 1.0.4}
+BuildRequires:  gcc-c++, libxmltooling-devel, libsaml-devel, shibboleth-sp-devel
 %if "%{_vendor}" == "redhat"
 BuildRequires: redhat-rpm-config
 %endif
@@ -56,9 +57,9 @@ BuildRequires:  libXerces-c-devel >= 2.8.0
 BuildRequires:  libxerces-c-devel >= 2.8.0
 %endif
 Requires: libxml-security-c-devel >= 1.4.0
-Requires: libxmltooling-devel, libsaml-devel, shibboleth-devel
+Requires: libxmltooling-devel, libsaml-devel, shibboleth-sp-devel
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
-%{!?_with_log4cpp:Requires: liblog4shib-devel}
+%{!?_with_log4cpp:Requires: liblog4shib-devel >= 1.0.4}
 
 %description -n libshibresolver-devel
 This package contains a Shibboleth SP Extension that provides
