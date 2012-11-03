@@ -1,3 +1,9 @@
+shibboleth-resolver (0.3-2) unstable; urgency=low
+
+  * Merge in upstream changes
+
+ -- Sam Hartman <hartmans@debian.org>  Sat, 03 Nov 2012 05:53:26 -0400
+
 shibboleth-resolver (0.3-1) unstable; urgency=low
 
   * New upstream
