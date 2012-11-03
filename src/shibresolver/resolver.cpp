@@ -144,9 +144,16 @@ void ShibbolethResolver::setRequest(const SPRequest* request)
     if (request) {
         const GSSRequest* gss = dynamic_cast<const GSSRequest*>(request);
         if (gss) {
-            // TODO: fix API to prevent destruction of contexts
+#ifdef SHIBRESOLVER_HAVE_GSSAPI_NAMINGEXTS
+            gss_name_t name = gss->getGSSName();
+            if (name != GSS_C_NO_NAME) {
+                addToken(name);
+                return;
+            }
+#endif
             gss_ctx_id_t ctx = gss->getGSSContext();
-            addToken(&ctx);
+            if (ctx != GSS_C_NO_CONTEXT)
+                addToken(&ctx);
         }
     }
 #endif
