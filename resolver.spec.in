@@ -96,6 +96,7 @@ This package includes files needed for development.
 %files -n libshibresolver1
 %defattr(-,root,root,-)
 %{_libdir}/libshibresolver.so.*
+%{_libdir}/libshibresolver-lite.so.*
 
 %files -n libshibresolver-devel
 %defattr(-,root,root,-)
