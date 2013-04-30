@@ -1,8 +1,8 @@
 Name:		@PACKAGE_NAME@
 Version:	@PACKAGE_VERSION@
 Summary:	Shibboleth SP Attribute Resolver Library
-Release:	1
-Vendor:		Shibboleth Consortium
+Release:	2
+>>>>>>> now shibboleth-sp-devel not shibboleth-devel
 Group:		System Environment/Libraries
 License:	Apache 2.0
 URL:		http://shibboleth.net/
