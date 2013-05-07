@@ -72,7 +72,7 @@ This package includes files needed for development.
 %setup -q
 
 %build
-%configure %{?options}
+%configure %{?options} --with-gssapi
 %{__make} pkgdocdir=%{pkgdocdir}
 
 %install
