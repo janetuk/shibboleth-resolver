@@ -8,12 +8,6 @@ License:	Apache 2.0
 URL:		http://shibboleth.net/
 Source0:	http://shibboleth.net/downloads/extensions/sp/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-%if 0%{?suse_version} > 1030
-BuildRequires:  libXerces-c-devel >= 2.8.0
-%else
-BuildRequires:  libxerces-c-devel >= 2.8.0
-%endif
-BuildRequires:  libxml-security-c-devel >= 1.4.0
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel >= 1.0.4}
 BuildRequires:  gcc-c++, libxmltooling-devel, libsaml-devel, shibboleth-sp-devel
@@ -51,12 +45,6 @@ Group:      Development/Libraries
 Requires:   libshibresolver1 = %{version}-%{release}
 Provides:   @PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:  @PACKAGE_NAME@-devel < %{version}-%{release}
-%if 0%{?suse_version} > 1030
-BuildRequires:  libXerces-c-devel >= 2.8.0
-%else
-BuildRequires:  libxerces-c-devel >= 2.8.0
-%endif
-Requires: libxml-security-c-devel >= 1.4.0
 Requires: libxmltooling-devel, libsaml-devel, shibboleth-sp-devel
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:Requires: liblog4shib-devel >= 1.0.4}
