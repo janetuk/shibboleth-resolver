@@ -517,8 +517,10 @@ void RemotedResolver::resolve(
                     )
                 );
             resolver->resolveAttributes(*ctx.get());
-            if (!ctx->getResolvedAttributes().empty())
-                resolvedAttrs.insert(resolvedAttrs.end(), ctx->getResolvedAttributes().begin(), ctx->getResolvedAttributes().end());
+            if (!ctx->getResolvedAttributes().empty()) {
+		resolvedAttrs.insert(resolvedAttrs.end(), ctx->getResolvedAttributes().begin(), ctx->getResolvedAttributes().end());
+		ctx->getResolvedAttributes().clear();
+	    }
         }
     }
     catch (exception& ex) {
