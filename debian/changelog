@@ -1,3 +1,9 @@
+shibboleth-resolver (0.3-3) unstable; urgency=low
+
+  * Take ownership of resolved attributes returned to caller
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 04 Sep 2013 08:08:52 -0400
+
 shibboleth-resolver (0.3-2) unstable; urgency=low
 
   * Merge in upstream changes
