@@ -1,5 +1,5 @@
 AC_PREREQ([2.50])
-AC_INIT([shibboleth-resolver], [0.3], [MOONSHOT-COMMUNITY@JISCMAIL.AC.UK], [shibboleth-resolver])
+AC_INIT([shibboleth-resolver], [1.0.0], [MOONSHOT-COMMUNITY@JISCMAIL.AC.UK], [shibboleth-resolver])
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
