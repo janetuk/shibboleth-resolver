@@ -6,8 +6,7 @@ docfiles = \
 	CREDITS.txt \
 	LICENSE.txt \
 	NOTICE.txt \
-	README.txt \
-	LOG4CPP.LICENSE
+	README.txt
 	
 pkgdoc_DATA = $(docfiles)
 
